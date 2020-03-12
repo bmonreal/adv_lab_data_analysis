@@ -1,9 +1,11 @@
-#All About git (OK, a little about git)
+# All About git (OK, a little about git)
 Git is basically the modern standard system for /version control/.  What is easiest to explain about version control is what it isn't: it isn't "I wrote some code and saved it as mycode.C.  I emailed that to my colleague who edited it and saved mycode-Edited.C.  I found a bug in that so I emailed her back mycode-Edited-Fixed.C.  But she had been fixing another bug in the meantime and had to find my edits to merge mycode-Edited.C (her version) with mycode-Edited-Fixed.C (my version)."  Nor is it like a Google Doc: "Here is the only copy of the document.  I edited it, then you edited it, then I edited it.  Shoot, three edits ago I accidentally deleted the intro, can you roll it back?  Wait, don't roll it back, we'd lose the last big edit." 
 
 Instead, Git puts your project under version control.  As you edit your documents, it keeps a record of what changes were made in which order.  At any time, it can spit back a copy of the document with any requested chain of changes---even if that's not the order you made the changes in.  "Bob took mycode.C and made Edit-A and Edit-B to the first subroutine. At the same time Alice had mycode.C and was making Edit-C to the second subroutine.   Git, please show the current master copy as if Edits A, B, and C had all been made."
 
 The idea is that git allows one or many people to edit a common project, and allow a single working version---or indeed multiple working versions---of the project to "exist".  I will try to show in a few examples why you want to do that.
+
+## Getting started
 
 Open up a terminal (note: there are ways to do this within, e.g., Emacs, or XCode, but I only know the command line version myself.) and start typing.   Let's pretend we are going to simulate a planet's orbit using Newton's laws.  I will type this stuff in and make obvious coding errors for the sake of showing some of the versioning issues.
 
@@ -44,6 +46,8 @@ $ git commit -m "initial commit; one force function"
  1 file changed, 4 insertions(+)
  create mode 100644 sim.py
 ```
+
+## Committing code while you debug
 
 Maybe next you realize you forgot to define GNewton.  Let's fix that in our text editor.
 
@@ -146,16 +150,17 @@ echo 'some nonsense I am going to accidentally overwrite my file with' > sim.py
 In a normal filesystem, that'd be bad right?  You just overwrote your code with nonsense.  But you can ask Git to check out a clean copy.  It'll be recreated from the commit list.
 
 ```
-git checkout sim.py
+git checkout master sim.py
 ```
 
+## Reverting and branching
 Here is an example of where Git's branching and merging features are useful.  "git checkout" lets you get any copy---any state you've ever had.  What happens is that there's a pointer, the "head", which tells git which past-edit-record you want to be looking at.  Notice, for example, that we have STARTED refactoring the vector/scalar code but we haven't finished. What would you do if your advisor, right now, wanted an improved version of the plot you made before?  With axis labels, say?  You can't do it now---you changed other things in the code so the current version won't plot anything.  However, you can tell Git to turn your working-directory back into the state it was in when you made the plot.  Get the long hash from the log that tells you which commit you want.
 
 ```
 git checkout 35a6dd901e90dfc479405b6c5f1d0841dec60554
 ```
 
-We're now looking at an old version of the file.  We want to add axis labels and stuff by editing THIS version.  How do we save that new chain of edits?  It's not edits we want to make to the master version---the one that's in the middle of the vector/scalar rewrite---but it's not edits we want to discard.  We want a new BRANCH of the edit history.  Tell Git to name this new branch:
+We're now looking at an old version of the file.  (If you just wanted  to look at this, rather than editing it, you're don---when you are finished just `git checkout HEAD master`.) We want to add axis labels and stuff by editing THIS version.  How do we save that new chain of edits?  It's not edits we want to make to the master version---the one that's in the middle of the vector/scalar rewrite---but it's not edits we want to discard.  We want a new BRANCH of the edit history.  Tell Git to name this new branch:
 
 ```
 $ git checkout -b "make_plot_prettier"
@@ -190,6 +195,7 @@ $ git checkout master
 Switched to branch 'master'
 ```
 
+## Merging two branches
 Here's the particular magic of git.  You can /merge branches/.  Getting that plot command rihgt was a lot of work!  Can we pull that work /back into/ the master branch?  We sure can.  You have master checked out.  This gets exciting.  Run this:
 
 ```
@@ -199,9 +205,9 @@ CONFLICT (content): Merge conflict in sim.py
 Automatic merge failed; fix conflicts and then commit the result.
 ```
 
-OK, whoa, a conflict.  The master branch of `sim.py` shows the `plt.plot` line of code looking one way,  the `make\_plot\_prettier` branch shows it looking another way.  Git is going to show you the two side by side so you can decide which is the one to keep in the merge.
+OK, whoa, a conflict!  Is that scary?  No, it's normal.  The master branch of `sim.py` shows the `plt.plot` line of code looking one way,  the `make\_plot\_prettier` branch shows it looking another way.  Git is going to show you the two side by side so you can decide which is the one to keep in the merge.
 
-Sort of terrifyingly, it does this by showing you a HORRIBLY MANGLED VERSION OF SIM.PY with both versions shown as a sort of comparison.  Look at it:
+What does it show you?  It shows you a HORRIBLY MANGLED VERSION OF SIM.PY with both versions shown as a sort of comparison.  Look at it:
 
 ```
 $ cat sim.py 
@@ -246,6 +252,15 @@ $ git commit -a -m "merged in pretty plot  command"
 [master eec3089] merged in pretty plot  command
 ```
 
+Remember, if you don't do that `commit` then none of the above is saved.  Did you get confused during the merge-conflict and wish you'd never done it?  Run `git merge --abort` to abandon the attempted merge.
+
+### Aside: what Git-Merge can handle and what it can't
+Code, text, datalogs ... these are all files where you can say "this /line/ of text changed from version A to version B".  That is not true of image files, PDFs, executables, etc..  If you have PDFs, PNGs, etc., checked into your repository---and you don't have to, they will live in the directory and ignore Git if you never `git add` them---then your merge-conflict-decisions will look like "should I keep ALL of version A or ALL of version B"?  It's still doable, but in general I try not to version-control PDFs and PNGs.
+
+Unfortunately, `.ipynb` files are a mix of code and images.  There are slightly fancier `git` tools allowing you to version-control just the code components, but I am still learning these.
+
+## Your git history
+
 You now have a nontrivial git history; you can view it like this:
 ```
 $ git log --pretty=format:"%h %s" --graph
@@ -264,7 +279,31 @@ Your code developed for a while in a single version, then split in two different
 
 The industry-adoption-driving power of version control is that people can collaborate.  Two people can work together on a software project, even the same file, by letting their individual edit histories pile up in different "branches" (each branch looking like a solo-coding project with an undo history) which periodically "merge" when a given branch is deemed to have fixed a bug, or added a feature, which other coders will want to base their own next efforts on.
 
+## Summary of solo workflows
+### Minimal version
+As a solo script-hacking-y coder most of the time you will be doing the same thing repetitively.
 
+0) Get into your repository and `git checkout master` (or otherwise get into the right state)
+1) Edit your code; get to a minor stopping point
+2) Run `git commit -a -m "type_a_commit_message_here"`
+
+### Branch-and-merge version
+A notably better workflow is "branch early, branch often".  The nice thing about this is that, in your git log, the "master branch" has a small-ish, understandable commit history; and anything checked out from master is "sort of working code".  All of the tiny debugging commits, syntax errors, typos, etc., are committed in the branches.
+
+0) Get into your repository and `git checkout master` (or otherwise get into the right state)
+1) Think about what you want to work on next.
+2) Start a branch with `git checkout -b todays_branch_name`
+    1) Edit your code and work on this feature
+    2) Run `git commit -a -m "type_a_commit_message_here"` regularly
+3) When the feature basically works, merge and commit
+	1) Run `git checkout master`
+	2) Run `git merge todays_branch_name`
+	3) Resolve any merge conflicts (should be minimal in this workflow)
+	4) `git commit -a -m "describe the new feature"`
+
+# Connecting to github.com
+
+Go to github.com and create an account.  
 
 
 
