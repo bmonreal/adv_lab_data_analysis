@@ -1,7 +1,7 @@
 # All About git (OK, a little about git)
-Git is basically the modern standard system for /version control/.  What is easiest to explain about version control is what it isn't: it isn't "I wrote some code and saved it as mycode.C.  I emailed that to my colleague who edited it and saved mycode-Edited.C.  I found a bug in that so I emailed her back mycode-Edited-Fixed.C.  But she had been fixing another bug in the meantime and had to find my edits to merge mycode-Edited.C (her version) with mycode-Edited-Fixed.C (my version)."  Nor is it like a Google Doc: "Here is the only copy of the document.  I edited it, then you edited it, then I edited it.  Shoot, three edits ago I accidentally deleted the intro, can you roll it back?  Wait, don't roll it back, we'd lose the last big edit." 
+Git is basically the modern standard system for *version control*.  What is easiest to explain about version control is what it isn't: it isn't "I wrote some code and saved it as mycode.C.  I emailed that to my colleague who edited it and saved mycode-Edited.C.  I found a bug in that so I emailed her back mycode-Edited-Fixed.C.  But she had been fixing another bug in the meantime and had to find my edits to merge mycode-Edited.C (her version) with mycode-Edited-Fixed.C (my version)."  Nor is it like a Google Doc: "Here is the only copy of the document.  I edited it, then you edited it, then I edited it.  Shoot, three edits ago I accidentally deleted the intro, can you roll it back?  Wait, don't roll it back, we'd lose the most recent edit." 
 
-Instead, Git puts your project under version control.  As you edit your documents, it keeps a record of what changes were made in which order.  At any time, it can spit back a copy of the document with any requested chain of changes---even if that's not the order you made the changes in.  "Bob took mycode.C and made Edit-A and Edit-B to the first subroutine. At the same time Alice had mycode.C and was making Edit-C to the second subroutine.   Git, please show the current master copy as if Edits A, B, and C had all been made."
+Instead, Git puts your project under version control.  As you edit your documents, it keeps a record of what changes were made in which order.  At any time, it can spit back a copy of the document with any requested chain of changes---even if that's not the order you made the changes in.  "Bob took mycode.C and made Edit-A and Edit-B to the first subroutine. At the same time Alice had mycode.C and was making Edit-C to the second subroutine.   Git, please show a current master copy as if Edits A and C had been made in that order."
 
 The idea is that git allows one or many people to edit a common project, and allow a single working version---or indeed multiple working versions---of the project to "exist".  I will try to show in a few examples why you want to do that.
 
@@ -196,7 +196,7 @@ Switched to branch 'master'
 ```
 
 ## Merging two branches
-Here's the particular magic of git.  You can /merge branches/.  Getting that plot command rihgt was a lot of work!  Can we pull that work /back into/ the master branch?  We sure can.  You have master checked out.  This gets exciting.  Run this:
+Here's the particular magic of git.  You can *merge branches*.  Getting that plot command rihgt was a lot of work!  Can we pull that work *back into* the master branch?  We sure can.  You have master checked out.  This gets exciting.  Run this:
 
 ```
 $ git merge make_plot_prettier
@@ -207,7 +207,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 OK, whoa, a conflict!  Is that scary?  No, it's normal.  The master branch of `sim.py` shows the `plt.plot` line of code looking one way,  the `make\_plot\_prettier` branch shows it looking another way.  Git is going to show you the two side by side so you can decide which is the one to keep in the merge.
 
-What does it show you?  It shows you a HORRIBLY MANGLED VERSION OF SIM.PY with both versions shown as a sort of comparison.  Look at it:
+What does it show you?  It shows you a MANGLED VERSION OF SIM.PY with both versions shown as a sort of comparison.  This is scary if you were not expecting it, but it's normal. Look at it:
 
 ```
 $ cat sim.py 
@@ -232,7 +232,7 @@ plt.plot([range[10],[force(1,1,r) for r in range(10)],xlabel='radius (m)',ylabel
 
 Git has done some things which are worth pointing out.  It recognizes that the import statements and the Gnewton definition are in both edit histories; they're there intact in the new merged chain.  It recognizes that the function "force" was edited to be named to "scalar\_force" and it thinks there is no problem making that edit in the new merged chain (even though it's a pure product of the `master` branch).  When it sees both a new function and a modified plot  command, it's confused.  Were you trying to do this merge to change the plot command?  Or to add the vector\_force function?  Or both?  It doesn't know.  
 
-Git has given you a job: look at everything between the angle-brackets, equals-signs, and other-angle-brackets, and edit away the things you don't want.  Emacs makes this pretty easy in simple case, but it's really just editing.  When you're done editing, commit the results.  Here's my edit:
+Git has given you a job: look at everything between the angle-brackets, equals-signs, and other-angle-brackets, and edit away the things you don't want.  There are tools that make this easier, but in simple cases your text editor will do fine---just edit away the unwanted code choices, then the bracket-and-arrow-and-equals lines.  When you're done editing, commit the results.  Here's my edit:
 
 ```
  $ cat sim.py 
@@ -255,7 +255,7 @@ $ git commit -a -m "merged in pretty plot  command"
 Remember, if you don't do that `commit` then none of the above is saved.  Did you get confused during the merge-conflict and wish you'd never done it?  Run `git merge --abort` to abandon the attempted merge.
 
 ### Aside: what Git-Merge can handle and what it can't
-Code, text, datalogs ... these are all files where you can say "this /line/ of text changed from version A to version B".  That is not true of image files, PDFs, executables, etc..  If you have PDFs, PNGs, etc., checked into your repository---and you don't have to, they will live in the directory and ignore Git if you never `git add` them---then your merge-conflict-decisions will look like "should I keep ALL of version A or ALL of version B"?  It's still doable, but in general I try not to version-control PDFs and PNGs.
+Code, text, datalogs ... these are all files where you can say "this *line* of text changed from version A to version B".  That is not true of image files, PDFs, executables, etc..  If you have PDFs, PNGs, etc., checked into your repository---and you don't have to, they will live in the directory and ignore Git if you never `git add` them---then your merge-conflict-decisions will look like "should I keep ALL of version A or ALL of version B"?  It's still doable, but in general I try not to version-control PDFs and PNGs.
 
 Unfortunately, `.ipynb` files are a mix of code and images.  There are slightly fancier `git` tools allowing you to version-control just the code components, but I am still learning these.
 
@@ -287,7 +287,7 @@ As a solo script-hacking-y coder most of the time you will be doing the same thi
 1) Edit your code; get to a minor stopping point
 2) Run `git commit -a -m "type_a_commit_message_here"`
 
-### Branch-and-merge version
+### Branch-early, branch-often version
 A notably better workflow is "branch early, branch often".  The nice thing about this is that, in your git log, the "master branch" has a small-ish, understandable commit history; and anything checked out from master is "sort of working code".  All of the tiny debugging commits, syntax errors, typos, etc., are committed in the branches.
 
 0) Get into your repository and `git checkout master` (or otherwise get into the right state)
@@ -301,9 +301,55 @@ A notably better workflow is "branch early, branch often".  The nice thing about
 	3) Resolve any merge conflicts (should be minimal in this workflow)
 	4) `git commit -a -m "describe the new feature"`
 
+### Pull request version
+The common thing you'll run into in collaborative settings is *like* branch-early, but there is also a sense that the master branch is *curated*.  A `merge` into the master branch is a notably bigger deal than a `commit -m "ongoing debugging of force() func"`.  Maybe the master branch is something that five or ten or a thousand other users are counting on being able to run.
+
+In terms of `git` terminology, there are two separate actions that result in a `merge` onto the master branch.  One action is taken by the coder.  It is called a *pull request*, meaning "please pull my code into the master branch", and there is a certain syntax.  When a pull request has been made, it is visible to the master-branch-owner, who has a chance to review it before running `merge`.
+
+We will talk about this more after we are doing team analysis using github.
+
 # Connecting to github.com
 
-Go to github.com and create an account.  
+Go to github.com and create an account.  Follow all the instructions for getting git software installed on your computer.
+
+## Getting a copy of an existing repo
+On the left side of your browser window is a list of your repositories.  I have added you as a collaborator to a repository called `bmonreal/adv_lab_data_analysis`.  Click on that.
+
+There are a series of tabs.  "<> code" is usually visible by default.  Click on code, then look for a green button called "Clone or download" on the right.  Copy the string you see there; it may look  like
+
+```
+https://github.com/bmonreal/adv_lab_data_analysis.git
+```
+or like
+```
+git@github.com:bmonreal/adv_lab_data_analysis.git
+```
+
+Now, you are going to tell your computer to (a) get a copy of the entire Git  history from this site, and (b) remember the URL so you can push your bits of history back onto it.  You are getting the whole history---the master branch, other branches, everything that anyone else has pushed.
+
+Instructions for what to do next are here:
+
+https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository
+
+Now that this is set up, there is a small change to your typical workflow.
+
+To start a block of work, run
+
+```
+$ git pull
+```
+
+This downloads anything that has changed on the GitHub repo---i.e, work that other people have done---since the last time you pulled.  It then tries to merge all of that (i.e, apply that chain of edits) to the repo you have locally.  Notice that this can cause trouble (i.e. merge conflicts) if you did some edits before running `pull`---better practice is "don't touch any files between last night's last `push` and this morning's `pull`.
+
+You spend a few hours coding, something useful gets done, and you want your code to be available to your collaborators.  There are a few specific use cases, depending on whether you're trying to commit to the remote master branch or to another branch.  For this class, I will assume you are *typically* working on a branch (not master) you made yourself, but that you want to go to github so I can see it.  
+
+```
+$ git push origin --all
+```
+
+Where does "origin" come from?  That's the name of the connection to the remote repo (i.e. GitHub).  If you are unsure of what that second argument is, run `git remote -v` to see a list of what your local repo is connected to.
+
+
 
 
 
