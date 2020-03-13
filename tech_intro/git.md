@@ -313,16 +313,16 @@ We will talk about this more after we are doing team analysis using github.
 Go to github.com and create an account.  Follow all the instructions for getting git software installed on your computer.
 
 ## Getting a copy of an existing repo
-On the left side of your browser window is a list of your repositories.  I have added you as a collaborator to a repository called `bmonreal/adv_lab_data_analysis`.  Click on that.
+On the left side of your browser window is a list of your repositories.  I have added you as a collaborator to a repository called `bmonreal/adv_lab_student_work`.  Click on that.
 
 There are a series of tabs.  "<> code" is usually visible by default.  Click on code, then look for a green button called "Clone or download" on the right.  Copy the string you see there; it may look  like
 
 ```
-https://github.com/bmonreal/adv_lab_data_analysis.git
+https://github.com/bmonreal/adv_lab_student_work.git
 ```
 or like
 ```
-git@github.com:bmonreal/adv_lab_data_analysis.git
+git@github.com:bmonreal/adv_lab_student_work.git
 ```
 
 Now, you are going to tell your computer to (a) get a copy of the entire Git  history from this site, and (b) remember the URL so you can push your bits of history back onto it.  You are getting the whole history---the master branch, other branches, everything that anyone else has pushed.
