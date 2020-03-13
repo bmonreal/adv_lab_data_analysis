@@ -17,8 +17,8 @@ The format of typical class meetings will be:
     * Make sure you've checked something into Github
     * I'll check out a few different branches and we'll talk about the output plots together.
 
-## Intro to Git
-
+## Intro to Git and course tech
+See [[tech_intro/README.md]] for an introductory explanation of Git and Github, where we'll be sharing and discussing code and plots.
 
 
 
