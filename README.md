@@ -32,8 +32,12 @@ Please go to [understanding_chi2/README.md](understanding_chi2/README.md)
 
 ### 3: Classical error propagation, but numerically
 
-### 4: Spotting biases in analysis procedures
+### 4: Exponentials, power laws, and some real cosmic ray data
+Please go to [cosmic_rays/README.md](cosmic_rays/README.md)
 
-### 5: A deep dive into a curve fit; debugging fit problems
+### 5: Pitfalls: examples of biased analysis procedures
+Please go to [pitfalls/README.md](pitfalls/README.md).
 
-### 6: Using the covariance matrix; exclusion plots
+### 6: A deep dive into a curve fit; debugging fit problems
+
+### 7: Using the covariance matrix; exclusion plots
