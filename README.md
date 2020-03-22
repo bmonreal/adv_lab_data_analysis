@@ -20,23 +20,23 @@ The format of typical class meetings will be:
     * I'll check out a few different branches and we'll talk about the output plots together.
 
 ## Intro to Git and course tech
-See [tech_intro/README.md](tech_info/README.md) for an introductory explanation of Git and Github, where we'll be sharing and discussing code and plots.
+See [tech_intro/](tech_info/) for an introductory explanation of Git and Github, where we'll be sharing and discussing code and plots.
 
 ## Topics
 
-### 1: Means, measurements, and errors
-Please go to [means_and_mmts/README.md](means_and_mmts/README.md) 
+### 1: Means, measurements, and errors (Tues, Mar 24)
+Please go to [means_and_mmts/](means_and_mmts/) 
 
-### 2: Understanding chi-squared statistics
-Please go to [understanding_chi2/README.md](understanding_chi2/README.md)
+### 2: Understanding chi-squared statistics (Thurs, Mar 26)
+Please go to [understanding_chi2/](understanding_chi2/)
 
-### 3: Classical error propagation, but numerically
+### 3: Classical error propagation, but numerically (Tues, Mar 31)
 
-### 4: Exponentials, power laws, and some real cosmic ray data
-Please go to [cosmic_rays/README.md](cosmic_rays/README.md)
+### 4: Exponentials, power laws, and some real cosmic ray data (Thurs, Apr 2 and Tues, Apr 7)
+Please go to [cosmic_rays/](cosmic_rays/)
 
 ### 5: Pitfalls: examples of biased analysis procedures
-Please go to [pitfalls/README.md](pitfalls/README.md).
+Please go to [pitfalls/](pitfalls/).
 
 ### 6: A deep dive into a curve fit; debugging fit problems
 
