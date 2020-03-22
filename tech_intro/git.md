@@ -310,7 +310,7 @@ We will talk about this more after we are doing team analysis using github.
 
 # Connecting to github.com
 
-Go to github.com and create an account.  Follow all the instructions for getting git software installed on your computer.
+Go to github.com and create an account.  Follow all the instructions for getting git software installed on your computer.  You will need to set up an ssh key for making secure connections to github; Prof. Copi has detailed instructions on this at [Github_account_setup.pdf](Github_account_setup.pdf)
 
 ## Getting a copy of an existing repo
 On the left side of your browser window is a list of your repositories.  I have added you as a collaborator to a repository called `bmonreal/adv_lab_student_work`.  Click on that.

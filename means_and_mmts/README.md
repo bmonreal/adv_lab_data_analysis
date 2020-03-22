@@ -6,7 +6,7 @@ Imagine an apparatus whose job is monitoring the wavelength of a stellar spectra
 
 The standard statistical claim is that, if the single-run error is X, and you average together N runs, the error on the average is X/sqrt(N); this is called the "standard error on the mean."  In this lab, we will explore that fact and its implications and exceptions.
 
-## Exercise 1 (solo)
+## Exercise 1 
 
 Simulate N runs of such an experiment by having Python generate a set of random numbers with the specified properties.  Here is a code snippet to get you started:
 
@@ -20,11 +20,11 @@ For several values of N, calculate the average of N runs.  Plot this average as 
 
 Your plot should be able to convince me that the improvement is really 1/sqrt(N) and not 1/N or some other factor.  
 
-## Exercise 2 (solo)
+## Exercise 2 
 
 Repeat the "average together N runs" thing above, making a set of 10 complete-N-run-experiments for each N.  For each N you can now calculate the standard deviation (i.e., the actual observed standard error on the mean) using the set of 10 experiments.  Make a plot with N on the x-axis, and standard-deviation-of-the-experiments on the y-axis, as a clearer test of the 1/sqrt(N) expectation.
 
-## Exercise 3 (with a lab partner)
+## Exercise 3 
 
 We said earlier that a run (with 0.1nm precision) takes 5 minutes.  However, finding the absolute values of the wavelengths involves a calibration procedure that takes a long time, and the calibration constants drift over time---it's a slow drift, and not necessarily linear, but it does mean you *cannot* just average together all your data.  Please analyze the dataset from [spectrometer.py](spectrometer.py) and provide your best estimate of the wavelength of the line observed (and put an error bar on this estimate) Can you do better than 0.1 nm?  
 
