@@ -39,14 +39,3 @@ The breakpoint is called the "ankle" of the cosmic ray energy spectrum.
 
 ### 2d: In case your other instructors are phoning it in in coronavirus season and you're feeling under-challenged.
 The Pierre Auger paper linked above gives (page 16, equation 3.1) the nine-parameter fit function that describes the entire spectrum.  Neat, huh?  If you are feeling ambitious, see if you can get this function to fit the data and reproduce the published numbers. 
-
-## Exercise 3: Energy resolution and powerlaws
-
-The Auger data has already been processed heavily from the experimental data; in particular, the analysts have taken their raw data ("counts at different measured energies") and attempted to remove the blurring caused by experimental energy resolution.
-
-Please attempt the following exercise:
-1) Generate a fake dataset whose 
-
-
-
-

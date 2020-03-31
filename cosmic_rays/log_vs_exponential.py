@@ -27,7 +27,6 @@ In this case I am specifying a function of the form 10^x rather than
 e^x and will do everything in log-10.   The parameter called "wid" 
 in the exponential model is the same as the parameter called "a" in 
 the linear model.
-
 '''
 
 def exp_model(x,norm,slope):
@@ -77,14 +76,11 @@ fails, run it again ... or think about what to modify to handle that
 situation.)   
 '''
 
-y_err = np.array([100.0 for x in x_values])   
-exp_y_values = np.random.normal(exact_y_values,y_err)
+y_err = np.array([100.0 for x in x_values])    # this is "pythonic"
+exp_y_values = np.random.normal(exact_y_values,y_err) # this is "numpy-ic"
 
 if any([x <= 0 for x in exp_y_values]):
-    raise ValueError("This run happened to have some negative data.  
-It's not going to behave well when we take logs.  Instead of writing 
-code to clean it up (that's your job) I have opted to exit.  Run again
-and it'll probably work.") 
+    raise ValueError("This run happened to have some negative data.       It's not going to behave well when we take logs.  Instead of writing      code to clean it up (that's your job) I have opted to exit.  Run again     and it'll probably work.") 
 
 f, (ax1,ax2,ax3,ax4) = plt.subplots(4,1,figsize=(8,8))
 ax1.set_title("Exponential data")
@@ -101,7 +97,7 @@ logtruth = np.log10(exact_y_values)
 '''
 First, how do you even put an error bar on the log10 of a value?  In 
 the limit of small errror bars, this is how, and it's about as good 
-as you can do in practice.  When the error bars are a large fraction 
+as you can do in practice.  When the error bars are a large fraction                                         
 of the data value, you properly speaking would need *asymmetric* error
 bars, and that's a whole other thing.  (See the README.md for why.)
 '''
@@ -169,7 +165,7 @@ ax2.errorbar(x_values,logdata,yerr=logerrorbars,marker="*",
                  linestyle=" ",label="data")
 ax2.plot(x_values,logtruth,label="truth",linestyle=":")
 ax2.plot(x_values,best_fit,label="best_fit")
-ax2.text(0.3,0.9,"Example 1: straight-line fit using errors",
+ax2.text(0.3,0.9,"Example 2: straight-line fit using errors",
              transform=ax2.transAxes)
 
 ax2.text(0.3,0.1,"chi2=%f, P=%f"%(chi2,pchi2),
