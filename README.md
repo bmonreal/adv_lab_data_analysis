@@ -30,10 +30,10 @@ Please go to [means_and_mmts/](means_and_mmts/)
 ### 2: Understanding chi-squared statistics (Thurs, Mar 26)
 Please go to [understanding_chi2/](understanding_chi2/)
 
-### 3: Classical error propagation, but numerically (Tues, Mar 31)
-
-### 4: Exponentials, power laws, and some real cosmic ray data (Thurs, Apr 2 and Tues, Apr 7)
+### 3: Exponentials, power laws, and some real cosmic ray data (Tues, Mar 31 and Thurs, Apr 2)
 Please go to [cosmic_rays/](cosmic_rays/)
+
+### 4: Classical error propagation, but numerically (Thurs, Apr 4)
 
 ### 5: Pitfalls: examples of biased analysis procedures
 Please go to [pitfalls/](pitfalls/).
