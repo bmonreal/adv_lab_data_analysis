@@ -33,11 +33,13 @@ Please go to [understanding_chi2/](understanding_chi2/)
 ### 3: Exponentials, power laws, and some real cosmic ray data (Tues, Mar 31 and Thurs, Apr 2)
 Please go to [cosmic_rays/](cosmic_rays/)
 
-### 4: Classical error propagation, but numerically (Thurs, Apr 4)
+### 4: A deep dive into a curve fit; debugging fit problems (Tues, Apr 4 and Thurs, Apr 6)
+Please go to [deep_dive/](deep_dive/)
 
-### 5: Pitfalls: examples of biased analysis procedures
+### Classical error propagation, but numerically 
+
+### Pitfalls: examples of biased analysis procedures
 Please go to [pitfalls/](pitfalls/).
 
-### 6: A deep dive into a curve fit; debugging fit problems
 
-### 7: Using the covariance matrix; exclusion plots
+### Using the covariance matrix; exclusion plots
