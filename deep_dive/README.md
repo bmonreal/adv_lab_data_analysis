@@ -84,7 +84,11 @@ Evaluate chi2 at three specific points:
 2) Look at the error in x0 reported by the fitter.  Add one error bar to x0, then use the Exercise 2 method to get the best possible chi2 there.
 3) Same, but at x0 _minus_ one error bar.
 
-What is the relationship in chi2 between those three evaluations? 
+What is the relationship in chi2 between those three evaluations?
+
+Do an Exercise-2-style parameter scan very close to the minimum and pay close attention to the shape of the minimum in the region encompassing +/- 1 error bar.   You should see a parabola.
+
+4) Looking back at the verbose fit output of Exercise 3, show whether it has done enough evaluations to actually determine the shape of this parabola.
 
 # Exercise 5: Exclusion plots in 2D
 
