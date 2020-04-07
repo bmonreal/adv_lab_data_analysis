@@ -3,7 +3,8 @@
 The data file [false\_minimum\_data.json](false\_minimum\_data.json) is a JSON file containing an array of y-values.  (JSON is a useful format for saving data to text files; in Python it is like getting text files to store dicts.)  Here is how to import it:
 
 ```
-with open("false_minimum_data.txt") as f:
+import json
+with open("false_minimum_data.json") as f:
      data = json.load(f)
      exp_y_values = np.array(data["exp_y_values"])
 ```
@@ -45,7 +46,7 @@ fix_mean = 1.0 # pick some value of the mean
 def unnamed_function(x,norm):
     return narrowpeak(x,fix_mean,norm)
 
-curve_fit(unnamed_function,x_values,exp_y_values,,sigma=y_err,absolute_sigma=True)
+curve_fit(unnamed_function,x_values,exp_y_values,sigma=y_err,absolute_sigma=True)
 ```
 
 The Python "lambda" feature basically lets you do that redefinition---it's called an "anonymous function"---inline with your code.  The entire first argument of `curve_fit`, below, is a temporary definition of a one-parameter function (which happens to be the `narrowpeak`-with-a-fixed-mean we want).  `curve_fit` sees that function and minimizes it just like it would have done above. 
