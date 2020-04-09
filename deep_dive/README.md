@@ -4,7 +4,7 @@ The data file [false\_minimum\_data.json](false\_minimum\_data.json) is a JSON f
 
 ```
 import json
-with open("false_minimum_data.json") as f:
+with open("false_minimum_data.txt") as f:
      data = json.load(f)
      exp_y_values = np.array(data["exp_y_values"])
 ```
@@ -46,7 +46,7 @@ fix_mean = 1.0 # pick some value of the mean
 def unnamed_function(x,norm):
     return narrowpeak(x,fix_mean,norm)
 
-curve_fit(unnamed_function,x_values,exp_y_values,sigma=y_err,absolute_sigma=True)
+curve_fit(unnamed_function,x_values,exp_y_values,,sigma=y_err,absolute_sigma=True)
 ```
 
 The Python "lambda" feature basically lets you do that redefinition---it's called an "anonymous function"---inline with your code.  The entire first argument of `curve_fit`, below, is a temporary definition of a one-parameter function (which happens to be the `narrowpeak`-with-a-fixed-mean we want).  `curve_fit` sees that function and minimizes it just like it would have done above. 
@@ -91,6 +91,21 @@ Do an Exercise-2-style parameter scan very close to the minimum and pay close at
 
 4) Looking back at the verbose fit output of Exercise 3, show whether it has done enough evaluations to actually determine the shape of this parabola.
 
-# Exercise 5: Exclusion plots in 2D
+# Exercise 5: The chi2 vs parameter space in 2D
 
-(will add)
+Since this is a two-parameter function, you could in principle dispense with "fitting" entirely.  Just pick pairs of values for `x0` and `norm`, generate the hypothesis curve for each one (you don't have to call `curve_fit`) and evaluate chi2.
+
+Go ahead and do this, on a fairly coarse grid (say, take steps of length 4 in `x0` and of length 3 in `norm`), and spend some time looking at different representations of the result.  You might try `plt.plot_surface` and `plt.contourf`.  Are there false minima in this plot that weren't visible in Exercise 3?  
+
+What you learned in Exercise 4, however, was that the region we think of as "within one error bar" is specifically "the region in which chi2 is no more than +1 above its global minimum".  "within two error bars" is where chi2 is no more than +4 above the minimum.  Do a zoomed-in, higher-resolution two-parameter parameter scan and make the zoomed in chi2-vs-norm-vs-x0 plot; use `plt.contourf` specifically to color in the 2D regions representing one error bar or two error bars. 
+
+# Exercise 6: A multiparameter fit/scan
+
+I supplied you with a `narrowpeak` function with only two free parameters.  Replace this with a full four-parameter function:
+
+```
+def narrowpeak(x,x0,norm,width,background):
+     return norm*np.exp(-((x-x0)/width)**2) + background
+```
+
+All of the previous exercises should still work, possibly with different detailed results.  Retry Exercises 2 and 3 in particular.  How many more evaluations does it take to fit four parameters?
