@@ -8,20 +8,20 @@ The LEP electron-positron collider ran from 1989 to 2000.  It was originally des
 
 In the last months of running, the ALEPH experiment claimed to have seen 8 events that matched the predicted properties of the then-undiscovered Higgs Boson, corresponding to a Higgs with mass 114 GeV.  Here are the claimed observations as of September 5, 2000.  I will report, not a number-of-events, but the "probability that background could fluctuate into a signal this high or higher".  
 
-1) ALEPH claimed their signal was P=1.6e-4
-2) L3 claimed their signal was P = 0.84 
-3) DELPHI claimed their signal was P = 0.67
-4) OPAL claimed their signal was P = 0.47
+1. ALEPH claimed their signal was P=1.6e-4
+2. L3 claimed their signal was P = 0.84 
+3. DELPHI claimed their signal was P = 0.67
+4. OPAL claimed their signal was P = 0.47
 
-In other words, only ALEPH saw anything interesting; the others saw events consistent with background.
+In other words, only ALEPH saw anything interesting; the others saw events consistent with background.  But ALEPH's signal was "huge".
 
-There are two hypotheses we can consider: (a) there is no 115 GeV Higgs, and ALEPH's rare fluctuation was a fluke or a mistake; and (b) there is really a 115 GeV Higgs; ALEPH's reading was high-ish but not too unlikely, and the other three experiments' readings were low-ish but not too unlikely either.
+There are two hypotheses we can consider: (a) there is no 115 GeV Higgs, and ALEPH's rare fluctuation was a fluke or a mistake; and (b) there is really a 115 GeV Higgs (i.e. the true value of X is above zero); ALEPH's reading was high-ish but not too unlikely, and the other three experiments' readings were low-ish but not too unlikely either.
 
 ### Exercise 1:
 
-To give us a simple handle on this, let's translate the probabilities above into familiar terms.  Let's say every experiment was measuring a quantity X.  In the null hypothesis, their X would have a mean of 0 and a standard deviation of 1.  Translate the probabilities above into the four values of X (X<sub>A</sub>, X<sub>L</sub>, X<sub>D</sub>, X<sub>O</sub>) that the experiments had reported on September 5th.
+To give us a simple handle on this, let's translate the probabilities above into familiar terms.  Let's say every experiment was measuring a quantity X.  In the null hypothesis, X has a normal distribution with a mean of 0 and a standard deviation of 1.  Translate the probabilities above into the four values of X (X<sub>A</sub>, X<sub>L</sub>, X<sub>D</sub>, X<sub>O</sub>) that the experiments had reported on September 5th.  (Note: the object `scipy.stats.norm` has many useful functions related to normal distributions, in particular `scipy.stats.norm.cdf(x0)` which tells you the probability of drawing X < `x0` and its inverse `scipy.stats.norm.ppf(p)` which tells you what value of `x0` would give a CDF probability `p`.  
 
-IMPORTANT NOTE: at this point in your code/notebook, you will be doing various calculations like "how many standard deviations is X<sub>A</sub> from zero?".  Although I just told you that the standard deviation in any X is 1.00, please enter this as a variable, because we're going to change it later.
+IMPORTANT NOTE: after this point in your code/notebook, you will be doing various calculations like "how many standard deviations is X<sub>A</sub> from zero?".  Although I just told you that the standard deviation in any X is 1.00, and many `scipy.stats.norm` functions have `stdev=1` as a default, please enter this as a variable, because we're going to change it later.
 
 If the null hypothesis is true, as we saw, the probability of ALEPH fluctuating this high is  1.6e-4.  What is the probability of _any one_ experiment fluctuating as high as ALEPH did?
 
@@ -37,17 +37,17 @@ Now we apply our your parameter-scan skills.  Consider a range of possible value
 
 Based on ALEPH's excess, LEP ran for an additional month (let's call it "run 2"). In Run 2:
 
-1) ALEPH claimed their signal was P=0.43
-2) L3 claimed their signal was P = 9.0e-3
-3) DELPHI claimed their signal was P = 0.52
-4) OPAL claimed their signal was P = 6.2e-2
+1. ALEPH claimed their signal was P=0.43
+2. L3 claimed their signal was P = 9.0e-3
+3. DELPHI claimed their signal was P = 0.52
+4. OPAL claimed their signal was P = 6.2e-2
 
 Translate these into X-values using the mean=0, sd=1 model as before.  (Since Run 2 is shorter than Run 1 this is not quite right, but let's pretend it is.) 
 
 We can do a couple of things.
 
-1) Treat Run 1 and Run 2 as independent; you now have eight X-values; do the chi2 X<sub>E</sub> scan as before. 
-2) For each expriment, average the Run 1 and Run 2 numbers to get its final X (think carefully about the standard deviation on this); repeat the four-X-value chi2 scan as before.
+1. Treat Run 1 and Run 2 as independent; you now have eight X-values; do the chi2 X<sub>E</sub> scan as before. 
+2. For each expriment, average the Run 1 and Run 2 numbers to get its final X (think carefully about the standard deviation on this); repeat the four-X-value chi2 scan as before.
 
 ### Exercise 4: The $100M decision
 
