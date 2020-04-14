@@ -36,6 +36,9 @@ Please go to [cosmic_rays/](cosmic_rays/)
 ### 4: A deep dive into a curve fit; debugging fit problems (Tues, Apr 4 and Thurs, Apr 6)
 Please go to [deep_dive/](deep_dive/)
 
+### 5: A statistical decisionmaking exercise (Tues, Apr 14)
+Please go to [decisionmaking/](decisionmaking/)
+ 
 ### Classical error propagation, but numerically 
 
 ### Pitfalls: examples of biased analysis procedures
