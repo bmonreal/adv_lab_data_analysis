@@ -74,6 +74,14 @@ In this case, if you are given `a,Vth_0,sigma_Vth` it is easy to compute the res
 
 Re-run exercise 1 by calling `least_squares` directly rather than `curve_fit`.  (This is just as an exercise and does not have the interesting features above, that is for next week.)  You will need to write a wrapper function which, internally, calls `narrowpeak`; more annoyingly, you will have to use a `lambda:` trick (or something similar) to deliver the actual *dataset* into the function.
 
+#### Exercise 3:
+
+Here is an alternative hypothesis for describing the Exercise 1 data.  Write a residuals-calculating function that reflects it:
+
+"The y-values are mostly described by the narrowpeak() function; however, find the datapoint with the worst positive residual `R`, subtract `A*R` from that point, and add `B*R` to the point with the worst negative residual.
+
+(There is no physical excuse for this, I am just trying to concoct something that fits in the 'transform the data during the fit' category.)
+
 ## Non-chi2 loss functions
 
 The point of the above is to wean ourselves off `curve_fit`, which had previously tied us to chi^2 and chi^2-based fitting, and get closer to doing raw minimization on our own test statistics.  But that is probably for next week.
