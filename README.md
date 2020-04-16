@@ -38,7 +38,11 @@ Please go to [deep_dive/](deep_dive/)
 
 ### 5: A statistical decisionmaking exercise (Tues, Apr 14)
 Please go to [decisionmaking/](decisionmaking/)
- 
+
+### 6: Raw minimization problems and working towards the likelihood function (Thurs, Apr 16)
+Please go to [likelihood/](likelihood/)
+
+
 ### Classical error propagation, but numerically 
 
 ### Pitfalls: examples of biased analysis procedures
