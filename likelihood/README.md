@@ -9,7 +9,7 @@ Chi^2 is not the only test statistic that has this property.  Let's look at some
 
 ## A level deeper than curve_fit
 
-Deep in the source code, `curve_fit` is just a user-friendly 'wrapper' function.  The ugly details---deciding which parameters to adjust, deciding when to stop, deciding what errors to report---are handled by (usually, I think) `scipy.optimize.least_squares`.  It is worth looking at the [documentation for this](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html#scipy.optimize.least_squares) function because it documents some interesting options.  But it's also worth understanding what it does.
+Deep in the source code, `curve_fit` is just a user-friendly 'wrapper' function.  The ugly details---deciding which parameters to adjust, deciding when to stop, deciding what errors to report---are handled by either  `scipy.optimize.leastsq` or  `scipy.optimize.least_squares`.  It is worth looking at the [documentation for this](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html#scipy.optimize.least_squares) function because it documents some interesting options.  But it's also worth understanding what it does.
 
 We should contrast the call with `curve_fit`.  For `curve_fit` you pass in (a) a function, which, on evaluation with parameters fed in, returns a theory curve (b) an array of data points.  `curve_fit` evaluates the function, subtracts the data points, and gets an array of residuals.  (As you have now done several times, an array of residuals can be quickly turned into a chi2 value via,. e.g., `sum((residuals/errors)**2)`.)
 
@@ -38,11 +38,42 @@ The answer is that `least_squares` can be coaxed into minimizing test statistics
         array_like with shape (3, m) where row 0 contains function values,
         row 1 contains first derivatives and row 2 contains second
         derivatives. Method 'lm' supports only 'linear' loss.
+    f_scale : float, optional
+        Value of soft margin between inlier and outlier residuals, default
+        is 1.0. The loss function is evaluated as follows
+        ``rho_(f**2) = C**2 * rho(f**2 / C**2)``, where ``C`` is `f_scale`,
+        and ``rho`` is determined by `loss` parameter. This parameter has
+        no effect with ``loss='linear'``, but for other `loss` values it is
+        of crucial importance.
+
 ```
 
 What this means is that `least_squares` will let you interfere with the calculation of the test statistic you're going to minimize.  The chi^2 you have calculated in the past has been basically `sum(pull^2)`.  Every fluctuation gets squared and the squares are added up.   What if you did `sum(arctan(pull^2))`?  That'd look like standard chi^2-adding-up of small pulls (because arctan(x) &asymp; x for x<1) but suppresses the importance of large pulls.  What if you did `sum(abs(pull))` (the option 'soft_l1' above is an approximation to this)?
 
-### Exercise 1:
-Take the dataset and four-parameter model from [deep_dive/](deep_dive/) (and sensible starting guesses). Continue using `curve_fit` but try each of the five `loss=` options.  (These arguments are handed down from `curve_fit` to `least_squares`.)  
+#### Exercise 1:
+Take the dataset and four-parameter model from [deep_dive/](deep_dive/) (and sensible starting guesses). Continue using `curve_fit` but try each of the five `loss=` options and a few different values of `f_scale=` (These arguments are handed down from `curve_fit` to `least_squares`.)  You will also have to pass argument `method='trf'`, which affects the minimum-search strategy but not, as you can confirm, the result.  By looking at the function, can you reason about why different treatments of outliers have the effects shown?
+
+Try again, with a fake dataset generated from this code:
+```
+	true_y_values = narrowpeak(x_values,60,20,3,10)
+	exp_y_values_ng = true_y_values + np.random.laplace(0,np.sqrt(true_y_values))
+```
+
+The Laplace distribution will spit out many more ugly outliers than the normal distribution.  What do the different loss functions do?
+
+### Why would I ever call `least_squares` when `curve_fit` can do the same thing?
+
+You use `curve_fit` if you have a set of parameters, and changing them changes the _parameterized theory curve_.  What if some of your parameters are easier to understand as affecting the _data_?
+
+Imagine you are at a semiconductor fab.  You have gone through 10000 samples of a new transistor and, using an apparatus involving a temperature controller, determined their threshhold voltages `Vth`.  You are confident that a histogram of Vth will be a normal distribution, which you'd like to fit to find the mean `Vth_0` and width `sigma_Vth`.  However, you have learned that the temperature contoller was haunted; the data points you thought were at `T` were in fact at `T + a*T^2`.  If you knew `a` you could correct the `Vth` values easily and make a corrected histogram.  However, `a` is itself unknown and have to be found by the fitter.  
+
+In this case, if you are given `a,Vth_0,sigma_Vth` it is easy to compute the residuals (by using `a` to transform the data before histogramming, and `Vth_0,sigma_Vth` to subtract from the histogram) and quite hard to write a general function of the sort used by `curve_fit`.  
 
 
+#### Exercise 2:
+
+Re-run exercise 1 by calling `least_squares` directly rather than `curve_fit`.  (This is just as an exercise and does not have the interesting features above, that is for next week.)  You will need to write a wrapper function which, internally, calls `narrowpeak`; more annoyingly, you will have to use a `lambda:` trick (or something similar) to deliver the actual *dataset* into the function.
+
+## Non-chi2 loss functions
+
+The point of the above is to wean ourselves off `curve_fit`, which had previously tied us to chi^2 and chi^2-based fitting, and get closer to doing raw minimization on our own test statistics.  But that is probably for next week.
