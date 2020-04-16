@@ -59,7 +59,7 @@ Try again, with a fake dataset generated from this code:
 	exp_y_values_ng = true_y_values + np.random.laplace(0,np.sqrt(true_y_values))
 ```
 
-The Laplace distribution will spit out many more ugly outliers than the normal distribution.  What do the different loss functions do?
+The Laplace distribution will spit out many more ugly outliers than the normal distribution.  How do the different loss functions handle them?
 
 ### Why would I ever call `least_squares` when `curve_fit` can do the same thing?
 
@@ -78,9 +78,9 @@ Re-run exercise 1 by calling `least_squares` directly rather than `curve_fit`.  
 
 Here is an alternative hypothesis for describing the Exercise 1 data.  Write a residuals-calculating function that reflects it:
 
-"The y-values are mostly described by the narrowpeak() function; however, find the datapoint with the worst positive residual `R`, subtract `A*R` from that point, and add `B*R` to the point with the worst negative residual.
+"The y-values are correctly described by the narrowpeak() function, however, the evenly spaced x-values are wrong.  The apparatus responds a little slowly after a large signal comes in.  The datapoint which is recorded at `x = x[i]` was actually taken at `x = x[i] - a*np.abs(y[i-i] - bg)` where `a` is some small delay parameter."  
 
-(There is no physical excuse for this, I am just trying to concoct something that fits in the 'transform the data during the fit' category.)
+(There is no physical excuse for this, I am just trying to concoct something that fits in the 'transform the data during the fit' category; I hope `a` will evaluate to a small number, since I did not put such an effect into the fake data, but I haven't tried it yet.)
 
 ## Non-chi2 loss functions
 
