@@ -39,8 +39,8 @@ Please go to [deep_dive/](deep_dive/)
 ### 5: A statistical decisionmaking exercise (Tues, Apr 14)
 Please go to [decisionmaking/](decisionmaking/)
 
-### 6: Raw minimization problems and working towards the likelihood function (Thurs, Apr 16)
-Please go to [likelihood/](likelihood/)
+### 6: Raw minimization problems and working towards the likelihood function (Thurs, Apr 16 and Tues, Apr 21)
+Please go to [likelihood/](likelihood/).  Non-chi2 and Exercises 4-6 added.
 
 
 ### Classical error propagation, but numerically 
