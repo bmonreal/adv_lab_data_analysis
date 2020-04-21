@@ -31,7 +31,7 @@ The answer is that `least_squares` can be coaxed into minimizing test statistics
               similarly to 'soft_l1'.
             * 'cauchy' : ``rho(z) = ln(1 + z)``. Severely weakens outliers
               influence, but may cause difficulties in optimization process.
-            * 'arctan' : ``rho(z) = arctan(z)``. Limits a maximum loss on
+d            * 'arctan' : ``rho(z) = arctan(z)``. Limits a maximum loss on
             a single residual, has properties similar to 'cauchy'.
 
         If callable, it must take a 1-d ndarray ``z=f**2`` and return an
@@ -84,4 +84,110 @@ Here is an alternative hypothesis for describing the Exercise 1 data.  Write a r
 
 ## Non-chi2 loss functions
 
-The point of the above is to wean ourselves off `curve_fit`, which had previously tied us to chi^2 and chi^2-based fitting, and get closer to doing raw minimization on our own test statistics.  But that is probably for next week.
+OK, at this point let's get into the real stuff.  The underlying science of "fitting a curve" is just finding the minimum value of a multiparameter function.  There are dozens or hundreds of strategies for doing this; picking the right strategy is not usually an interesting problem for a physicist.  (Go ask a computer scientist or applied mathematician.)  The basic Python routine we will use is `scipy.optimize.minimize`.  Please start by queueing up the [documentation for that](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.minimize).  Most of the arguments are vaguely like those of `least_squares`, except the first.
+
+The first argument is simply "give me a function which, given a parameter-choice vector, returns a scalar value".  To make things simple, let's do a very simple chi2 minimization.
+
+Here is an example of a chi2 function definition and a `minimize` call.  
+
+```
+def f2min_my_model_chi2(params,xdata,ydata,yerr):
+    ymodel = my_model(xdata,params)
+    return sum(((ydata - ymodel)/yerr)**2)
+	
+guesses = [1,1,1,1]
+my_results = minimize(f2min_my_model_chi2,guesses,args=(x_values,y_values,y_errors))
+best_fit_params = my_results['x']
+```
+
+The parameter errors are a bit obscure---unsurprisingly, since `minimize` does not know anything about our problem; it does not even know that we have a data- or error-related problem at all.  What it does do is measure the second derivatives of the function around the minimum and report this; it's the "inverse Hessian matrix" and, in the specific case where `fun` is spitting out chi2, it's basically the covariance matrix.
+
+```
+uncertainties =  [np.sqrt(my_results['hess_inv'].todense()[i,i]) for i in range(len(guesses))]
+```
+
+### Exercise 4:  Fit some data
+
+The following data (x,y, and errors) is supplied.  The underlying theory here is that `y` has a sigmoid form (specifically, an arctangent); you have to use four parameters to describe its asymptotic low value, its asymptotic high value, its `x`-offset (what value of `x` is the midpoint), and the steepness of the transition.
+
+```
+x_values =  array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
+y_values = array([1.65115602, 2.03701695, 2.53525369, 3.05232566, 3.43550141,
+         3.84288164, 4.12987307, 4.30959107, 4.39539739, 4.66194378])
+y_errors = array([0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06])
+```
+
+Write the function `my_model()` and make this code work.   
+
+### Exercise 5:  Use bounds
+
+One of the reasons `minimize` is so complicated is the existence of optional `bounds` and `constraints`.  Here is a fake-data-generator which will compel you to use them.  
+
+```
+def my_model_with_a_sqrt(x,params):
+    return params[0] + x*params[1] + np.sqrt(x*params[2])
+
+x_values = np.array([1,2,3,4,5,6,7,8,9,10])
+true_params = [5.4,0.4,0.3] # shhhh, don't look at this
+input_variance = 0.06 # seeekrit
+y_errors = np.ones(len(y_values))*input_variance
+
+y_theory = my_model_with_a_sqrt(x_values,true_params) 
+y_values = np.random.normal(y_theory, input_variance)
+```
+
+Why do we have to use bounds here?  Look at the `sqrt` in our function definition.  The minimizer doesn't "know" it's in there, it is just throwing parameter choices in and seeing what comes out.  Unfortunately in this case, sometimes it may take a stab at `params[2] < 0`, take the square root of a negative number, and the model will throw an error.  
+
+There are three ways to address this.  Please try each of them.
+
+#### 5a. Redefine the parameters.
+Sometimes it is possible to rewrite the function slightly.  Can you devise a function with the same shape (or class of shapes) as my three-parameter `my_model_with_a_sqrt` but that doesn't have this problem at all?  
+
+#### 5b. Use bounds.
+
+The `minimize` function allows you to pass in the optional argument `bounds=`.  The sqrt-related crashes can easily be treated as a `bounds` problem; you have to tell the minimizer that the third parameter's lower and upper limits are `(0,None)`; it will then not attempt to adjust the parameter below zero.  Implement this and run it, printing out the parameter values and error bars.
+
+Important pedagogical note: bounds can only be used safely to prevent the minimizer from _exploring_ a problematic region.  (You can use them to keep away from a known false minimum, for example.)  You want the minimizer to "bounce off" the bounds and find a minimum somewhere in the allowed region.  Run the fake-data-generation and (bounded) minimization problem several times; do you see any runs where the minimizer thinks `params[2]==0` (right at the bound) is the best fit value?  What happened? 
+
+Important science note: supposing the fitter could tell you, believably, that it concluded `params[2] = 0.1 +/- 0.5`; given that negative values are "unphysical", how do you interpret the error bars?  
+
+#### 5c. Use constraints (optional, a bit Python-hacker-y)
+
+The `minimize` function allows `constraints=` to be passed in.  Constraints can be used to set interdependencies among variables; maybe your function (or your physics) requires that `params[0] < params[1]`; maybe a conservation law enforces that all of your parameters sum to zero; that sort of thing.  It does not do anything different than `bounds` in this case but it might be worth reading that part of the documentation.
+
+### Exercise 6: Log likelihood minimization
+
+To understand why `chi2` minimizers work, we had to jump through some mental hoops to explain why the sum-of-squares-of-pulls is related to how-likely-the-data-is-to-look-like-Y.   A lot of modern stats methods skip that, and just ask the "how likely" question directly in the minimization process.
+
+Every time we encounter a data point `y_exp[i]`  (bearing a fluctuation governed by `y_err[i]`) and a hypothesis `y_th[i]`, we can ask: "if `y_th[i]` were true, how likely is `y_exp[i]`?"  We have already asked this, when the fluctuations were Gaussian, using the normal distribution CDFs.   (Here we will use the PDF, not the CDF.)
+
+```
+p[i] = scipy.stats.norm.pdf(y_exp[i],y_th[i],y_err[i])
+```
+
+When you have many data points, the probability of getting that whole ensemble is actually the *product* of all the probabilities.
+
+```
+ptot = 1
+for prob in p:
+	ptot = ptot*prob
+```
+
+If you maximized `ptot`, you'd have the best fit, just as if you minimized `chi2`.  (Notice we don't have a maximizer, we have a minimizer; we'd "minimize `-ptot`") However, it so happens that these long product calculations are prone to numerical errors.  What if we take the log of `ptot`?  The log of a product is the sum of the logs of the multiplicands.
+
+`logPtot = sum(np.log(p))`
+
+That quantity is the "log likelihood".  "Why is that worth computing?  Who cares?  It's easy to compute but it's not the thing we wanted to maximize!" you might say.  It's true, but remember that we wanted to maximize something.  The maximum of `ptot` is in exactly the same place as the maximum of the log of `ptot`.
+
+#### Exercise 6a: Refit the exercise-4 dataset using log likelihoods
+
+Write a function that returns the *negative* log likelihood of the data-theory comparison from Exercise 4, with the arctangent.  Use `scipy.minimize` to find the minimum negative log likelihood, e.g the maximum likelihood.
+
+#### Exercise 6a: Refit the exercise-1 fake dataset using log likelihoods
+
+Remember the Exercise 1 narrowpeak distribution---the one where we generated Laplacian noise?  You can use `scipy.stats.laplace.pdf` to get probabilities.  
+
+Notice that, in the fake data generation step, we got the error bars (i.e. the fluctuation sizes) from the theory values.  Rather than passing `y_err` as one of the function parameters, please calculate it inside the function and use the calculated values as your errors.  (This was impossible with `curve_fit`; `least_squares` could have done it but we didn't bother previously.)
+
+When you did Exercise 1, the interpretation of `chi2` was tricky (and the fits correspondingly wonky sometimes) because we were "adding up pulls"---but when we relied on mathmatical properties of the `chi2` statistics, we were implicitly relying on the pulls being normally distributed.  That problem is gone; your likelihood-PDF-lookups are putting in the relevant data from the actual relevant distributions.
+
