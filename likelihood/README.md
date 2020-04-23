@@ -183,6 +183,8 @@ That quantity is the "log likelihood".  "Why is that worth computing?  Who cares
 
 Write a function that returns the *negative* log likelihood of the data-theory comparison from Exercise 4, with the arctangent.  Use `scipy.minimize` to find the minimum negative log likelihood, e.g the maximum likelihood.
 
+NOTE: when you are looking at any of the scipy.stats probability distributions
+
 #### Exercise 6a: Refit the exercise-1 fake dataset using log likelihoods
 
 Remember the Exercise 1 narrowpeak distribution---the one where we generated Laplacian noise?  You can use `scipy.stats.laplace.pdf` to get probabilities.  
@@ -190,4 +192,56 @@ Remember the Exercise 1 narrowpeak distribution---the one where we generated Lap
 Notice that, in the fake data generation step, we got the error bars (i.e. the fluctuation sizes) from the theory values.  Rather than passing `y_err` as one of the function parameters, please calculate it inside the function and use the calculated values as your errors.  (This was impossible with `curve_fit`; `least_squares` could have done it but we didn't bother previously.)
 
 When you did Exercise 1, the interpretation of `chi2` was tricky (and the fits correspondingly wonky sometimes) because we were "adding up pulls"---but when we relied on mathmatical properties of the `chi2` statistics, we were implicitly relying on the pulls being normally distributed.  That problem is gone; your likelihood-PDF-lookups are putting in the relevant data from the actual relevant distributions.
+
+### Error estimation using likelihoods (LL)
+
+One neat thing you can do with likelihoods is the following.  Remember what we did with 2D chi2 parameter scans?  Try lots of different parameter inputs for the function, evaluate chi2, make a contour plot?  Well, we were making contour plots of the fairly-unintuitive parameter "chi2" and looking for also-fairly-unintuitive "region where chi2 deviates from its minimum a certain amount".
+
+We can do something similar with our likelihood function---scan lots of values of input parameters---but this time the estimator we get out is physically or mathematically meaningful---it's a probability.  (Well, it's the log of a probability so you can get the probability back out of it.)  2D probability density functions are pretty easy to plot and easy to think about.   In fact, N-dimensional probability density functions are fairly easy to think about.  One thing that is particularly fine thing to do is to find the average value of a distribution.
+
+Let's look at that arctan dataset from above;
+
+```
+x_values =  array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
+y_values = array([1.65115602, 2.03701695, 2.53525369, 3.05232566, 3.43550141,
+         3.84288164, 4.12987307, 4.30959107, 4.39539739, 4.66194378])
+y_errors = array([0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06])
+```
+
+This time I will give you the function
+
+```
+
+def my_model(x,params):
+    return params[0]*(np.arctan((x - params[1])/params[2]) + np.pi/2)/np.pi + params[3]
+```
+
+and tell you three of the four parameters: `[5.4,3.4,???,0.03]`.  I have left out the "steepness" parameter.
+
+#### Exercise 7a: Do a one-dimensional scan
+Try calculating the log-likelihood values obtained with values of `try_steepness= np.arange(-10,10,0.1)`.  By examination of that scan (not a fit) find the best fit value of the steepness.
+
+#### Exercise 7b: Just straight-up find the centroid
+You have a vector called `try_steepness` and another vector (called, say, `ll_values`) representing negative log-likelihoods.  Undo the log thing (it was just a numerical trick anyway, right?) and calculate `likelihood = np.exp(-ll_values)`.  Is there a calculation you can do that yields the mean steepness?  How close is it to the traditional minimization-based "best fit"?  
+
+#### Exercise 7c: Error bars
+The correct way to think about uncertainty in the likelihoods world is: can I draw a region on the `steepness` axis that encompasses 68% of the probability space?  There are actually various ways to approach that, depending on how you want to treat the symmetries---is it "68% of probability, with 34% above and 34% below the centroid"?  Or is it "68% of probability, picking high and low points of equal likelihoods with the centroid between them"?  Try to find a sensible error bar to put on this parameter.
+
+#### Exercise 7d: Multidimensional sampling
+
+The very neat thing about likelihoods is that the above 1D reasoning works very well in arbitrary numbers of dimensions.  Implement a 3-parameter model (say, fixing the fourth parameter at 0.03 and varying the other three); maybe try
+
+```
+try_range= np.arange(0,10,0.5)
+try_x0= np.arange(0,5,0.5)
+try_steepness= np.arange(0,5,0.5)
+```
+
+which will need 2000 calls to your LL function.  From the raw likelihood values, calculate the centroid of the probability distribution of each parameter.
+
+Modern likelihood analysis takes basically this approach to "fitting"---just throwing in parameter-choices and evaluating likelihoods, never "minimizing" in the mathematical sense.  The Exercise 7d version was a simple scan, which did a lot of its 2000 computationally-expensive evaluations in "useless" regions of parameter space that don't affect things much; a family of common techniques suitable for everyday fitting, called Markov Chain Monte Carlo (MCMC), jump around the parameter space and try to spend less time in the useless regions and more time in regions of high likelihood.  We do not have time in this semester to teach you MCMC properly, but knowing how to write a likelihood function (as you now do) is one of the big barriers to entry in the field.  To learn more, I recommend the (STAN)[https://mc-stan.org/] software packages.  Good luck!
+
+
+
+
 
