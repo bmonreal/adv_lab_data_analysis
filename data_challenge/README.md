@@ -1,13 +1,13 @@
-You are a particle physicist.  A previously-unknown particle has been created in your apparatus; when it appears it decays into a pair of muons.  Both muons enter a region where the magnetic field B makes them curve.  Since you can measure the track's curvature $R$ you know the particle's momentum $p$ via the Larmour formula.  In the form given below, plugging in B in tesla and R in meters will yield p in GeV/c.
+You are a particle physicist.  A previously-unknown particle has been created in your apparatus; when it appears it decays into a pair of muons.  Both muons enter a region where the magnetic field B makes them curve.  Since you can measure the track's curvature $R$ you know the particle's momentum _p_ via the Larmour formula.  In the form given below, plugging in _B_ in tesla and _R_ in meters will yield _p_ in the units GeV/c.
 
-$p = BR/3.3356$ 
+_p = BR/3.3356$_ 
 
 
 You also measure the initial direction of each muon track, so you know the angle $\theta$ between them.
  
 Once you know the two muon momenta p<sub>1</sub> and p<sub>2</sub> you can calculate the mass M (the "invariant mass") of the particle that decayed; the formula you use is: 
 
-$M^2 = p_1 p_2 (1-cos(\theta)) $
+_M<sup>2</sup> = p<sub>1</sub> p<sub>2</sub> (1-cos($\theta$))_ 
 
 Due to limitations of the spectrometer, there are uncertainties on all of these things.
 
